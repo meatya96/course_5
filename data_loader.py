@@ -1,11 +1,22 @@
 import psycopg2
 from hh_get_data import get_companies_data, get_vacancies_data
 
-def push_data_into_database():
+def push_data_into_database(user, password):
+
+    '''
+     Данная функция:
+     Получаеn данные о компаниях и вакансиях
+     Подключается к базе данных
+     Заполняет таблицы companies данными
+     Заполняет таблицы vacancies данными
+     Обрабатывает значения salary или другое значение, которое нужно использовать в случае отсутствия информации о зарплате
+
+     '''
+
     companies_data = get_companies_data()
     vacancies_data = get_vacancies_data()
 
-    conn = psycopg2.connect(dbname="homework_hh", user="postgres", password="12345678", host="localhost", port="5432")
+    conn = psycopg2.connect(dbname="homework_hh", user=user, password=password, host="localhost", port="5432")
     cur = conn.cursor()
 
     try:
@@ -25,7 +36,7 @@ def push_data_into_database():
             link = vacancy.get('link')
             description = vacancy.get('description')
 
-            # Обработка значения salary
+
             if salary == "No salary info":
                 salary = None  #когда нет зп
 
@@ -34,14 +45,14 @@ def push_data_into_database():
                 VALUES (%s, %s, %s, %s, %s, %s)
             """, (vacancy_id, company_id, title, salary, link, description))
 
-        # Завершение транзакции и сохранение изменений
+
         conn.commit()
         print("Данные успешно загружены в базу данных.")
     except Exception as e:
         conn.rollback()
         print(f"Произошла ошибка при загрузке данных: {e}")
     finally:
-        # Закрытие соединения
+
         conn.close()
 
 if __name__ == "__main__":

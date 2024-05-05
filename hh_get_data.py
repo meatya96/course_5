@@ -1,6 +1,10 @@
 import requests
 
 def get_companies_data():
+    '''
+        Добавляем статистические данные о компаниях
+
+    '''
     companies = {
         "Wildberries":87021,
         "Ozon":2180,
@@ -32,6 +36,9 @@ def get_companies_data():
     return company_data
 
 def get_vacancies_data():
+    '''
+    запрос к API для получения  информации о вакансиях
+    '''
     companies = {
         "Wildberries":87021,
         "Ozon":2180,
